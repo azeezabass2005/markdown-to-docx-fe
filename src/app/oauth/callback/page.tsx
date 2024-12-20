@@ -14,7 +14,9 @@ function OAuthCallback() {
 
 
   useEffect(() => {
+    console.log("Use effect called")
     const handleOAuthCallback = async () => {
+      console.log("The handleOAuthCallback has been called")
       // Extract authorization code from URL
       if (!code) {
         setError('No authorization code found');
