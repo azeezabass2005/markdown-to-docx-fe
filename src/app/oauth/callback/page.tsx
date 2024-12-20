@@ -9,29 +9,32 @@ import Cookie from 'js-cookie'
 function OAuthCallback() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useRouter();
+  const urlParams = useSearchParams();
+  const code = urlParams.get('code');
+
 
   useEffect(() => {
     const handleOAuthCallback = async () => {
       // Extract authorization code from URL
-      const urlParams = useSearchParams();
-      const code = urlParams.get('code');
-
       if (!code) {
         setError('No authorization code found');
         return;
       }
+      console.log(code, "This is code")
 
       try {
+        console.log("Should send")
         // Send authorization code to backend
         const response = await axios.post('https://markdown-to-docx.onrender.com/auth/google/callback', { 
-          code 
+          code: code
         }, {
           headers: {
             'Content-Type': 'application/json'
           }
         });
 
-       if(typeof window !== 'undefined') {
+        console.log("After sending")
+        console.log(response, "This is the response from the axios")
          // Store tokens and user info
          Cookie.set('googleAccessToken', response.data.access_token);
          Cookie.set('googleRefreshToken', response.data.refresh_token || '');
@@ -40,7 +43,6 @@ function OAuthCallback() {
          // Calculate token expiry (1 hour from now)
          const expiryTime = Date.now() + 3600000;
          Cookie.set('tokenExpiry', expiryTime.toString());
-       }
 
         // Redirect to main application
         navigate.push('/');
@@ -51,7 +53,7 @@ function OAuthCallback() {
     };
 
     handleOAuthCallback();
-  }, [navigate]);
+  }, [navigate, code]);
 
   if (error) {
     return (
@@ -74,3 +76,5 @@ function OAuthCallback() {
 }
 
 export default OAuthCallback;
+
+// Tongue scraper
