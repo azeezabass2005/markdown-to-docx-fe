@@ -29,14 +29,16 @@ function OAuthCallback() {
           }
         });
 
-        // Store tokens and user info
-        localStorage.setItem('googleAccessToken', response.data.access_token);
-        localStorage.setItem('googleRefreshToken', response.data.refresh_token || '');
-        localStorage.setItem('userInfo', JSON.stringify(response.data.user));
-
-        // Calculate token expiry (1 hour from now)
-        const expiryTime = Date.now() + 3600000;
-        localStorage.setItem('tokenExpiry', expiryTime.toString());
+       if(typeof window !== 'undefined') {
+         // Store tokens and user info
+         localStorage.setItem('googleAccessToken', response.data.access_token);
+         localStorage.setItem('googleRefreshToken', response.data.refresh_token || '');
+         localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+ 
+         // Calculate token expiry (1 hour from now)
+         const expiryTime = Date.now() + 3600000;
+         localStorage.setItem('tokenExpiry', expiryTime.toString());
+       }
 
         // Redirect to main application
         navigate.push('/');
