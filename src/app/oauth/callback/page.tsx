@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Cookie from 'js-cookie'
+
 
 function OAuthCallback() {
   const [error, setError] = useState<string | null>(null);
@@ -12,7 +13,7 @@ function OAuthCallback() {
   useEffect(() => {
     const handleOAuthCallback = async () => {
       // Extract authorization code from URL
-      const urlParams = new URLSearchParams(window.location.search);
+      const urlParams = useSearchParams();
       const code = urlParams.get('code');
 
       if (!code) {
