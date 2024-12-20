@@ -29,7 +29,6 @@ function MarkdownConverter() {
 
   // Check authentication status (unchanged)
   const isAuthenticated = () => {
-    if(typeof window === 'undefined') return;
     const token = localStorage.getItem('googleAccessToken');
     const expiry = localStorage.getItem('tokenExpiry');
     return !!(token && expiry && Date.now() < parseInt(expiry));
@@ -56,7 +55,7 @@ function MarkdownConverter() {
     setError(null);
 
     try {
-      if(typeof window === 'undefined') return;
+
       const response = await axios.get('https://markdown-to-docx.onrender.com/api/docs', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('googleAccessToken')}`
@@ -105,7 +104,7 @@ function MarkdownConverter() {
     }
 
     try {
-      if(typeof window === 'undefined') return;
+
 
       const response = await axios.get('https://markdown-to-docx.onrender.com/api/download-zip', {
         headers: {
