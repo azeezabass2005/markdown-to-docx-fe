@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie'
+
 
 interface GoogleDoc {
   id: string;
@@ -29,8 +31,8 @@ function MarkdownConverter() {
 
   // Check authentication status (unchanged)
   const isAuthenticated = () => {
-    const token = localStorage.getItem('googleAccessToken');
-    const expiry = localStorage.getItem('tokenExpiry');
+    const token = Cookie.get('googleAccessToken');
+    const expiry = Cookie.get('tokenExpiry');
     return !!(token && expiry && Date.now() < parseInt(expiry));
   };
 
@@ -58,7 +60,7 @@ function MarkdownConverter() {
 
       const response = await axios.get('https://markdown-to-docx.onrender.com/api/docs', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('googleAccessToken')}`
+          'Authorization': `Bearer ${Cookie.get('googleAccessToken')}`
         }
       });
 
@@ -84,7 +86,7 @@ function MarkdownConverter() {
     try {
       const response = await axios.post('https://markdown-to-docx.onrender.com/api/convert', {}, {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('googleAccessToken')}`
+          'Authorization': `Bearer ${Cookie.get('googleAccessToken')}`
         }
       });
 
@@ -108,7 +110,7 @@ function MarkdownConverter() {
 
       const response = await axios.get('https://markdown-to-docx.onrender.com/api/download-zip', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('googleAccessToken')}`
+          'Authorization': `Bearer ${Cookie.get('googleAccessToken')}`
         },
         responseType: 'blob'
       });
@@ -129,10 +131,10 @@ function MarkdownConverter() {
   // Logout (unchanged)
   const handleLogout = () => {
     if(typeof window === 'undefined') return;
-    localStorage.removeItem('googleAccessToken');
-    localStorage.removeItem('googleRefreshToken');
-    localStorage.removeItem('tokenExpiry');
-    localStorage.removeItem('userInfo');
+    Cookie.remove('googleAccessToken');
+    Cookie.remove('googleRefreshToken');
+    Cookie.remove('tokenExpiry');
+    Cookie.remove('userInfo');
     navigate.push('/');
   };
 

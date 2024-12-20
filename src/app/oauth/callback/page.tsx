@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import Cookie from 'js-cookie'
 
 function OAuthCallback() {
   const [error, setError] = useState<string | null>(null);
@@ -31,13 +32,13 @@ function OAuthCallback() {
 
        if(typeof window !== 'undefined') {
          // Store tokens and user info
-         localStorage.setItem('googleAccessToken', response.data.access_token);
-         localStorage.setItem('googleRefreshToken', response.data.refresh_token || '');
-         localStorage.setItem('userInfo', JSON.stringify(response.data.user));
+         Cookie.set('googleAccessToken', response.data.access_token);
+         Cookie.set('googleRefreshToken', response.data.refresh_token || '');
+         Cookie.set('userInfo', JSON.stringify(response.data.user));
  
          // Calculate token expiry (1 hour from now)
          const expiryTime = Date.now() + 3600000;
-         localStorage.setItem('tokenExpiry', expiryTime.toString());
+         Cookie.set('tokenExpiry', expiryTime.toString());
        }
 
         // Redirect to main application
